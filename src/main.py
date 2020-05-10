@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import predictor
+import models
 
 import pandas as pd
 
@@ -15,12 +16,11 @@ predictors              = [ predictor.Predictor( predictors_directory + dirent +
                            for dirent in sorted( listdir( predictors_directory ) )
                            if path.isdir( predictors_directory + dirent )]
 
+## Comentar si ya hemos calculado los errores
 for predictor in predictors:
     predictor.calculate_error_by_row( observations, columns_to_estimate )
     predictor.store_with_error_by_row()
 
 
-for predictor in predictors:
-    errors = predictor.get_error_by_day()
-    for i in range( len( errors ) ):
-        print( f"File { predictor.csv_names[ i ] } has { errors[ i ] } error." )
+collab_pred = models.CollaborativePredictor( predictors, observations )
+collab_pred.assign_errors()
