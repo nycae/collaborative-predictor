@@ -21,15 +21,25 @@ class Predictor:
                 self.csv_names.append( file )
                 
 
-    def calculate_error_by_row( self, experimental_values, columns = [ "CASOS", "Hospitalizados", "UCI", "Fallecidos", "Recuperados" ] ):
-        offset = 0
+    def calculate_error_by_row( self, experimental_values, columns, row_offset = 19 ):
+        iterations = 0
+        # file = open( "log.txt", "w+" )
         for df in self.dfs:
+            # file.write(f"Fichero: {iterations*row_offset}\n")
             for column in columns:
+                # file.write(f"{column}\n")
+                # partial_list = []
+                # for i in range( df.shape[ 0 ] ):
+                #     file.write( f'Comparando {df[ "CCAA" ][ i ]} {df[ "FECHA" ][ i ]} con {experimental_values[ "CCAA" ][ i + iterations * row_offset ]} {experimental_values[ "FECHA" ][ i + iterations * row_offset ]}\n' )
+                #     partial_list.append( abs( df[ column ][ i ].astype( "int64" ) 
+                #                              - experimental_values[ column ][ i + ( iterations * row_offset ) ].astype( "int64" ) ) )
+                #  df[ "{}_{}". format( column, "Error" ) ] = partial_list
+            # file.write("\n")
                 df[ "{}_{}". format( column, "Error" ) ] = [ abs( df[ column ][ i ].astype( "int64" ) 
-                                                            - experimental_values[ column ][ i + offset ].astype( "int64" ) )
+                                                            - experimental_values[ column ][ i + iterations* row_offset ].astype( "int64" ) )
                                                             for i in range(df.shape[ 0 ] ) ]
-            offset += 19 # Cada predicción tiene un offset de 19 por las comunidades autónomas
-        
+            iterations += 1 # Cada predicción tiene un offset de 19 por las comunidades autónomas
+
     def get_error_by_day( self ):
         return [ sum( row ) for row in self.get_error_by_day_and_row() ]
 
@@ -37,6 +47,19 @@ class Predictor:
     def get_error_by_day_and_row( self ):
         return [ [  df[ column ].sum() for column in df.columns if "Error" in column ] for df in self.dfs ]
         
+    def get_errors_of_columns( self, columns ):
+        # result = {}
+        # for column in columns:
+        #     result[ column ] = []
+        #     for df in self.dfs:
+        #         part_list = df[ f"{column}_Error" ].tolist()
+        #         result[ column ].append( part_list )
+        #     print(len(result[column]))
+        # return result 
+          
+        return { column : [ np.array( df[ "{}_Error".format( column ) ] )
+                for df in self.dfs ]
+                for column in columns }
 
     def store_with_error_by_row( self ):
         dest_dir = self.dir_path.replace( "test", "errors" )
@@ -46,3 +69,5 @@ class Predictor:
             file_name = dest_dir + self.csv_names[ i ]
             self.dfs[ i ].to_csv( file_name, index = False )
 
+    def __str__( self ):
+        return self.user

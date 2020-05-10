@@ -10,11 +10,11 @@ def transform_file( path ):
     headers = next( data )                                                  # Obviamos la cabecera
 
     ### Ordenamos las filas ###
-    data = sorted(data, key = lambda row: ( datetime.strptime(row[1], "%d/%m/%Y"), row[0]))
+    data = sorted(data, key = lambda row: ( datetime.strptime(row[1], "%Y-%m-%d" ), row[0]))
 
     ### Cambiamos el formato de la fecha
     for line in data:
-        new_date = datetime.strptime(line[1], "%d/%m/%Y")
+        new_date = datetime.strptime(line[1], "%Y-%m-%d")
         new_date = new_date.strftime('%d/%m/%Y')
         line[1] = new_date
 
@@ -30,8 +30,10 @@ def transform_file( path ):
     file.close()
 
 if __name__ == "__main__":
-    directory = "test/JFBR_JAGL/"
-    #directory = "test/IGH_SCS/"
+    # transform_file( "observations.csv" )
+    # directory = "test/JFBR_JAGL/"
+    # directory = "test/IGH_SCS/"
+    directory = "test/ESL_MTM/"
     for dirent in sorted( listdir( directory ) ):
         if path.isfile( directory + dirent ) and dirent.endswith(".csv"):
             transform_file( directory + dirent )
