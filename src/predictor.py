@@ -48,19 +48,17 @@ class Predictor:
         return [ [  df[ column ].sum() for column in df.columns if "Error" in column ] for df in self.dfs ]
         
     def get_errors_of_columns( self, columns ):
-        # result = {}
-        # for column in columns:
-        #     result[ column ] = []
-        #     for df in self.dfs:
-        #         part_list = df[ f"{column}_Error" ].tolist()
-        #         result[ column ].append( part_list )
-        #     print(len(result[column]))
-        # return result 
-          
-        return { column : [ np.array( df[ "{}_Error".format( column ) ] )
+        result = {}
+        for column in columns:
+            result[ column ] = []
+            for df in self.dfs:
+                result[ column ].append( np.array( df[ f"{column}_Error" ] ) )
+        return result 
+        '''
+        return { column : [ np.array( df[ "{}_Error".format( column ) ].tolist() )
                 for df in self.dfs ]
                 for column in columns }
-
+        '''
     def store_with_error_by_row( self ):
         dest_dir = self.dir_path.replace( "test", "errors" )
         Path( dest_dir ).mkdir( parents = True, exist_ok = True )
