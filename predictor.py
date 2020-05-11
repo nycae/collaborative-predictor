@@ -10,7 +10,7 @@ from pathlib import Path
 
 class Predictor:
     def __init__( self, dir_path :str ):
-        self.user       = path.splitdrive( dir_path )[ -1 ]
+        self.user       = path.basename( path.normpath( dir_path ) ) #path.splitdrive( dir_path )[ -1 ]
         self.dir_path   = dir_path
         self.dfs        = []
         self.csv_names  = []
