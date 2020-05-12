@@ -5,12 +5,11 @@ import pandas as pd
 
 from os import path
 from os import listdir
-from io import StringIO
 from pathlib import Path
 
 class Predictor:
     def __init__( self, dir_path :str ):
-        self.user       = path.basename( path.normpath( dir_path ) ) #path.splitdrive( dir_path )[ -1 ]
+        self.user       = path.basename( path.normpath( dir_path ) )
         self.dir_path   = dir_path
         self.dfs        = []
         self.csv_names  = []
@@ -54,17 +53,11 @@ class Predictor:
             for df in self.dfs:
                 result[ column ].append( np.array( df[ f"{column}_Error" ] ) )
         return result 
-        '''
-        return { column : [ np.array( df[ "{}_Error".format( column ) ].tolist() )
-                for df in self.dfs ]
-                for column in columns }
-        '''
-    def store_with_error_by_row( self ):
-        dest_dir = self.dir_path.replace( "test", "errors" )
-        Path( dest_dir ).mkdir( parents = True, exist_ok = True )
-        
+
+    def store_with_error_by_row( self, directory ):
+        Path( directory + self.user ).mkdir( parents=True, exist_ok=True )
         for i in range( len( self.dfs ) ):
-            file_name = dest_dir + self.csv_names[ i ]
+            file_name = directory + self.user + "/" + self.csv_names[ i ]
             self.dfs[ i ].to_csv( file_name, index = False )
 
     def __str__( self ):
