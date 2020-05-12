@@ -61,8 +61,8 @@ for day in range( days_to_predict ):
     temp_df = pd.DataFrame()
     for variable in collab_pred.acc_errors:
         temp_df.insert( 0, variable, collab_pred.acc_errors[ variable ][ day ] )
-        date += timedelta( days = 1 )
     temp_df.to_csv( f"data/errors/error_acumulado/{ date.strftime( '%d_%m_%Y' ) }.csv",  index_label = False, index = False )
+    date += timedelta( days = 1 )
         
 ### Creamos un predictor con los csv que acabamos de generar
 generated_predictor = predictor.Predictor( "data/res/" )
