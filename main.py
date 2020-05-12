@@ -9,8 +9,8 @@ import matplotlib.pyplot as plt
 
 from os import path
 from os import listdir
-
-from utils import adjust_lightness
+from datetime import datetime
+from datetime import timedelta
 
 cc_aa_count             = 19
 days_to_train           = 9
@@ -46,26 +46,21 @@ for predictor in predictors:
             plt.gca().axes.get_xaxis().set_ticks( [] )
             #plt.gca().axes.get_yaxis().set_ticks( [] )
             plt.legend( loc="upper left" )
-            #plt.show()
-            plt.savefig( f"images/{ predictor.user }_{ variable.replace( '_Error', '' ) }.png", dpi=300 )
+            plt.show()
+            #plt.savefig( f"images/{ predictor.user }_{ variable.replace( '_Error', '' ) }.png", dpi=300 )
             figures.append( figure )
-    
-for predictor in predictors:
-    for variable in predictor.dfs[ 15 ].columns:
-        if "Error" in variable:
-            print( f"{ predictor.user } -> { variable }: { np.sum( predictor.dfs[ 15 ][ variable ] ) }" )
             
     
 ### Creamos el modelo con los predictores
 collab_pred = models.CollaborativePredictor( predictors )
 ### Y lo ajustamos a los datos experimentales
-collab_pred.fit( observations, columns_to_estimate, other_columns, cc_aa_count, days_to_train, days_to_predict )
+collab_pred.fit( observations, columns_to_estimate, days_to_train, days_to_predict, cc_aa_count )# cc_aa_count, days_to_train, days_to_predict )
 
-# =============================================================================
-# i = 15
-# for result in results:
-#     result = result[[ "CCAA", "FECHA", "CASOS", "Hospitalizados", "UCI", "Fallecidos", "Recuperados" ]]
-#     result.to_csv( f"data/res/RPR_{ i }_04_2020.csv", index_label=False, index=False )
-#     i += 1
-# =============================================================================
+date = datetime( 2020, 4, 15 )
+for result in collab_pred.results:
+    result = result[[ "CCAA", "FECHA", "CASOS", "Hospitalizados", "UCI", "Fallecidos", "Recuperados" ]]
+    
+    result.to_csv( f"data/res/RPR_{ date.strftime( '%d_%m_%Y' ) }.csv", index_label=False, index=False )
+    date += timedelta( days = 1 )
+
 
