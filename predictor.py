@@ -22,18 +22,8 @@ class Predictor:
 
     def calculate_error_by_row( self, experimental_values, columns, row_offset = 19 ):
         iterations = 0
-        # file = open( "log.txt", "w+" )
         for df in self.dfs:
-            # file.write(f"Fichero: {iterations*row_offset}\n")
             for column in columns:
-                # file.write(f"{column}\n")
-                # partial_list = []
-                # for i in range( df.shape[ 0 ] ):
-                #     file.write( f'Comparando {df[ "CCAA" ][ i ]} {df[ "FECHA" ][ i ]} con {experimental_values[ "CCAA" ][ i + iterations * row_offset ]} {experimental_values[ "FECHA" ][ i + iterations * row_offset ]}\n' )
-                #     partial_list.append( abs( df[ column ][ i ].astype( "int64" ) 
-                #                              - experimental_values[ column ][ i + ( iterations * row_offset ) ].astype( "int64" ) ) )
-                #  df[ "{}_{}". format( column, "Error" ) ] = partial_list
-            # file.write("\n")
                 df[ "{}_{}". format( column, "Error" ) ] = [ abs( df[ column ][ i ].astype( "int64" ) 
                                                             - experimental_values[ column ][ i + iterations* row_offset ].astype( "int64" ) )
                                                             for i in range(df.shape[ 0 ] ) ]

@@ -49,6 +49,7 @@ class CollaborativePredictor:
                 user_variable_weight = np.add( user_variable_weight, self.errors[ user ][ variable ][ day ] )
         return np.sum( user_variable_weight )
     
+    
     def get_weight_acc( self, variable, sample_size ):
         weight = None
         for day in range( sample_size ):
@@ -61,7 +62,7 @@ class CollaborativePredictor:
     def assign_weights( self, columns, sample_size ):
         self.temp_acc_errors = { variable : self.get_weight_acc( variable, sample_size ) for variable in columns }
         for user in self.predictors:
-            self.weights[ user ] = { variable : np.divide( self.get_weight( user, variable, sample_size ), 
+            self.weights[ user ] = { variable : 1 - np.divide( self.get_weight( user, variable, sample_size ), 
                                     self.temp_acc_errors[ variable ] )
                                     for variable in columns }
         
